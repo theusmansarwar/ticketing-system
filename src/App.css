@@ -1,0 +1,67 @@
+:root {
+  --primary-color: #000000;
+  --primary-color2: #123458b3;
+  --secondary-color: #D4C9BE;
+  --background-color: #00d0e7;
+  --background-color2:rgba(128, 128, 128, 0.3);
+  --default-icon-size:24px;
+  --headings-color: var(--background-color);
+  --shadow-low1: #00d0e74a;
+  --shadow-low2: #006bcf00;
+  --shadow-low3: #91f3fe;
+  --default-box-shadow: 0 0 8px var(--background-color);
+  --left-space: 3%;
+  --mid-space: 94%;
+  --right-space: 3%;
+  --default-border: 1px solid var(--headings-color);
+  --text-color: white;
+  --font-family-base: var(--font-montserrat);
+  --default-p-size: 16px;
+  --default-time-size:12px;
+  --default-border-radius: 6px;
+  --gradient-one: linear-gradient(to bottom right, #e7e7e725, #000000);
+}
+.bg-wrapper {
+  width: 100%;
+  min-height: 100vh;
+  background: var(--primary-color);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  overflow-x: hidden;
+}
+
+
+
+.circle-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none; /* prevents any interference with user interaction */
+}
+
+.circle {
+  width: 80%;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--shadow-low1) 0%, var(--shadow-low2) 70%);
+  filter: blur(40px); /* optional for aesthetic depth */
+}
+@media(max-width:900px){
+   .circle:first-child {
+    display: none;
+  }
+
+  .circle:last-child {
+    width: 700px;
+    height: 700px;
+    margin-top: 15vh;
+  }
+}
