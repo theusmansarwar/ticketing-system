@@ -2,16 +2,17 @@ import React from "react";
 import "./FileMessage.css";
 import { IoCloudDownloadOutline } from "react-icons/io5";
 import { FaFile} from "react-icons/fa";
+import { formatDate } from "../../utils/formatDate";
 const baseUrl = "https://plutosec.ca/backend/api"
-const FileMessage = ({ type, file,filename }) => {
+const FileMessage = ({ type, msg}) => {
   return (
     <div className={`file-message ${type}`}>
       <div className="content">
         <FaFile />
-        <span>{filename}</span>
+        <span>{msg?.fileName}</span>
          <a
-          href={baseUrl + file} 
-          download={file}
+          href={baseUrl + msg?.file} 
+          download={msg?.file}
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -19,7 +20,7 @@ const FileMessage = ({ type, file,filename }) => {
         </a>
         
       </div>
-      <p className="time">12:03 PM</p>
+      <p className="time">{formatDate(msg?.createdAt)}</p>
     </div>
     
   );

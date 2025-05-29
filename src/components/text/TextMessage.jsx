@@ -1,13 +1,14 @@
 import React from "react";
 import "./TextMessage.css";
+import { formatDate } from "../../utils/formatDate";
 
-const TextMessage = ({type, message}) => {
+const TextMessage = ({type, msg}) => {
   return (
     <div className={`text-message ${type}`}>
       <p>
-        {message}
+        {msg?.message}
       </p>
-      <p className="time">12:03 PM</p>
+      <p className="time">{formatDate(msg?.createdAt)}</p>
     </div>
   );
 };

@@ -72,6 +72,7 @@ const Chat = () => {
         id: Date.now(),
         message: messageInput.trim(),
         senderemail: userEmail,
+        createdAt: new Date().toISOString(),
       };
 
       setMessages((prev) => [...prev, newMessage]);
@@ -99,6 +100,7 @@ const Chat = () => {
         file: selectedFile,
         fileName: selectedFile.name,
         senderemail: userEmail,
+        createdAt: new Date().toISOString(),
       };
 
       setMessages((prev) => [...prev, newMessage]);
@@ -152,18 +154,14 @@ const Chat = () => {
           const msgType = isSender ? "sender" : "receiver";
 
           return (
-            <div className={`message-wrapper ${msgType}`} key={msg._id || msg.id || index}>
+            <div
+              className={`message-wrapper ${msgType}`}
+              key={msg._id || msg.id || index}
+            >
               {msg.file ? (
-                <FileMessage
-                  type={msgType}
-                  file={msg.file instanceof File ? URL.createObjectURL(msg.file) : msg.file}
-                  filename={msg.fileName || msg.file?.name}
-                />
+                <FileMessage type={msgType} msg={msg} />
               ) : (
-                <TextMessage
-                  type={msgType}
-                  message={msg.message || msg.content}
-                />
+                <TextMessage type={msgType} msg={msg} />
               )}
             </div>
           );
