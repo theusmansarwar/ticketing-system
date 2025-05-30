@@ -17,7 +17,7 @@
   --text-color: white;
   --font-family-base: var(--font-montserrat);
   --default-p-size: 16px;
-  --default-time-size:12px;
+  --default-time-size:10px;
   --default-border-radius: 6px;
   --gradient-one: linear-gradient(to bottom right, #e7e7e725, #000000);
 }
