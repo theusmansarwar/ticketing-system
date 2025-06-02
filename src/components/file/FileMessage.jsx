@@ -7,7 +7,7 @@ const baseUrl = "https://plutosec.ca/backend/api"
 const FileMessage = ({ type, msg}) => {
   return (
     <div className={`file-message ${type}`}>
-      <div className="content">
+     
         <FaFile />
         <span>{msg?.fileName}</span>
          <a
@@ -20,8 +20,8 @@ const FileMessage = ({ type, msg}) => {
         </a>
         
       </div>
-      <p className="time">{formatDate(msg?.createdAt)}</p>
-    </div>
+     
+
     
   );
 };

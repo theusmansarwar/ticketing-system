@@ -8,7 +8,7 @@ import { fetchTicket } from "../../DAL/fetch";
 import { formatDate } from "../../utils/formatDate";
 import { createMessage } from "../../DAL/create";
 
-const Chat = () => {
+const Admin = () => {
   const { ticket_id } = useParams();
   const fileInputRef = useRef(null);
   const bottomRef = useRef(null);
@@ -28,10 +28,11 @@ const Chat = () => {
     }
   };
 
-  const userEmail = ticketData?.clientemail;
-  const receiverEmail = ticketData?.receiveremail;
-  const receivername = ticketData?.receivername;
-  const sendername = ticketData?.clientname;
+   const userEmail = ticketData?.receiveremail;
+  const receiverEmail = ticketData?.clientemail;
+  const receivername=ticketData?.clientname;
+  
+  const sendername = ticketData?.receivername;
 
   useEffect(() => {
     loadTicket();
@@ -40,6 +41,8 @@ const Chat = () => {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, ticketData]);
+
+ 
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -53,45 +56,46 @@ const Chat = () => {
     fileInputRef.current.value = null;
   };
 
-  const handleSendMessage = async () => {
-    if (messageInput.trim() === "" && !selectedFile) return;
+ const handleSendMessage = async () => {
+  if (messageInput.trim() === "" && !selectedFile) return;
 
-    const formData = new FormData();
-    formData.append("TicketId", ticket_id);
-    formData.append("senderemail", userEmail);
-    formData.append("receiveremail", receiverEmail);
-    formData.append("message", messageInput);
-    formData.append("receivername", receivername);
+  const formData = new FormData();
+  formData.append("TicketId", ticket_id);
+  formData.append("senderemail", userEmail);
+  formData.append("receiveremail", receiverEmail);
+  formData.append("message", messageInput);
+  formData.append("receivername", receivername);
 
-    if (selectedFile) {
-      formData.append("file", selectedFile);
-      formData.append("fileName", selectedFile.name);
+  if (selectedFile) {
+    formData.append("file", selectedFile);
+    formData.append("fileName", selectedFile.name);
+  }
+
+  try {
+    await createMessage(formData);
+
+    const newMessage = {
+      id: Date.now(),
+      message: messageInput.trim(),
+      senderemail: userEmail,
+      file: selectedFile || null,
+      fileName: selectedFile?.name || null,
+      createdAt: new Date().toISOString(),
+    };
+
+    setMessages((prev) => [...prev, newMessage]);
+
+    // ✅ Clear both text and file
+    setMessageInput("");
+    setSelectedFile(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = null;
     }
+  } catch (error) {
+    console.error("Error sending message:", error);
+  }
+};
 
-    try {
-      await createMessage(formData);
-
-      const newMessage = {
-        id: Date.now(),
-        message: messageInput.trim(),
-        senderemail: userEmail,
-        file: selectedFile || null,
-        fileName: selectedFile?.name || null,
-        createdAt: new Date().toISOString(),
-      };
-
-      setMessages((prev) => [...prev, newMessage]);
-
-      // ✅ Clear both text and file
-      setMessageInput("");
-      setSelectedFile(null);
-      if (fileInputRef.current) {
-        fileInputRef.current.value = null;
-      }
-    } catch (error) {
-      console.error("Error sending message:", error);
-    }
-  };
 
   return (
     <div className="chat-container">
@@ -102,7 +106,7 @@ const Chat = () => {
         <div className="header-right">
           <p>
             <span>Contact: </span>
-            {ticketData?.receivername}
+            {ticketData?.clientname}
           </p>
           <p>
             <span>Service: </span>
@@ -121,41 +125,42 @@ const Chat = () => {
             placeholder="Type your message here..."
             value={messageInput}
             onChange={(e) => setMessageInput(e.target.value)}
-            onKeyDown={(e) =>
-              e.key === "Enter" && !e.shiftKey && handleSendMessage()
-            }
+            onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && handleSendMessage()}
           />
-          <div className="file-input">
-            <input type="file" ref={fileInputRef} onChange={handleFileChange} />
+          <input type="file" ref={fileInputRef} onChange={handleFileChange} />
+         
 
-            {selectedFile && (
-              <div className="cancel-btn" onClick={handleRemoveFile}>
+          {selectedFile && (
+            <div className="file-preview">
+              <FileMessage
+                type="sender"
+                msg={{ file: selectedFile, fileName: selectedFile.name }}
+              />
+              <button className="cancel-btn" onClick={handleRemoveFile}>
                 <MdClose />
-              </div>
-            )}
-          </div>
+              </button>
+            </div>
+          )}
 
           <div className="send-btn" onClick={handleSendMessage}>
-            Send Message
+         Send Message
           </div>
         </div>
 
         {[...(ticketData?.chats || []), ...messages].map((msg, index) => {
           const isSender =
-            msg.senderemail === ticketData?.clientemail ||
+           msg.senderemail === ticketData?.receiveremail ||
             msg.email === ticketData?.clientemail;
           const msgType = isSender ? "sender" : "receiver";
 
           return (
-            <div
+           <div
               className={`message-wrapper ${msgType}`}
               key={msg._id || msg.id || index}
             >
               <div className="message-area">
-                <p className="sender-name">
-                  {isSender ? sendername : receivername}
-                </p>
-                <div className="sender-msg">
+              <p>{isSender ? sendername : receivername}</p>
+                <div>
                   {msg?.message && <p>{msg.message}</p>}
                   {msg?.file && <FileMessage type={msgType} msg={msg} />}
                 </div>
@@ -172,4 +177,4 @@ const Chat = () => {
   );
 };
 
-export default Chat;
+export default Admin;

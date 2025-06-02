@@ -1,18 +1,19 @@
 .file-message {
-  max-width: 300px;
+  max-width: 200px;
   width: fit-content;
-  background-color: var(--background-color2);
+  background-color: var(--primary-color);
   color: var(--text-color);
   border-radius: var(--default-border-radius);
   padding: 10px;
-}
-.file-message .content {
-  display: flex;
+margin-top: 10px;
+   display: flex;
   align-items: center;
   gap: 10px;
+   box-shadow: var(--default-box-shadow);
 }
-.file-message .content span {
-  color: white;
+
+.file-message span {
+
   border-left: 1px solid var(--text-color);
   padding-left: 10px;
   font-size: var(--default-p-size);
@@ -20,32 +21,14 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 200px;
-}
-.file-message svg {
-  color: white;
-  font-size: var(--default-icon-size);
-}
-.file-message .time {
-  display: flex;
-  justify-self: flex-end;
-  margin-top: 5px;
-  font-size: var(--default-time-size);
-  color: var(--background-color);
-}
-/* ///////// Sender styling ////////// */
-.file-message.sender {
-  background-color: var(--background-color);
-}
-.file-message.sender .content span {
-  color: black;
+  max-width: 300px;
+   color: black;
   border-left: 1px solid black;
 }
-.file-message.sender .content svg {
+.file-message svg {
   color: black;
   font-size: var(--default-icon-size);
 }
 
-.file-message.sender .time {
-  color: black;
-}
+
+
