@@ -29,6 +29,12 @@ margin-top: 10px;
   color: black;
   font-size: var(--default-icon-size);
 }
-
+@media (max-width: 900px) {
+  .file-message {
+ max-width: 350px;
+ display: flex;
+ justify-self: center;
+}
+}
 
 
