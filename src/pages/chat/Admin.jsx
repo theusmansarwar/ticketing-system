@@ -97,7 +97,7 @@ const Admin = () => {
 };
 
 
-  return (
+ return (
     <div className="chat-container">
       <div className="chat-header">
         <div className="header-left">
@@ -125,42 +125,41 @@ const Admin = () => {
             placeholder="Type your message here..."
             value={messageInput}
             onChange={(e) => setMessageInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && handleSendMessage()}
+            onKeyDown={(e) =>
+              e.key === "Enter" && !e.shiftKey && handleSendMessage()
+            }
           />
-          <input type="file" ref={fileInputRef} onChange={handleFileChange} />
-         
+          <div className="file-input">
+            <input type="file" ref={fileInputRef} onChange={handleFileChange} />
 
-          {selectedFile && (
-            <div className="file-preview">
-              <FileMessage
-                type="sender"
-                msg={{ file: selectedFile, fileName: selectedFile.name }}
-              />
-              <button className="cancel-btn" onClick={handleRemoveFile}>
+            {selectedFile && (
+              <div className="cancel-btn" onClick={handleRemoveFile}>
                 <MdClose />
-              </button>
-            </div>
-          )}
+              </div>
+            )}
+          </div>
 
           <div className="send-btn" onClick={handleSendMessage}>
-         Send Message
+            Send Message
           </div>
         </div>
 
         {[...(ticketData?.chats || []), ...messages].map((msg, index) => {
           const isSender =
-           msg.senderemail === ticketData?.receiveremail ||
+            msg.senderemail === ticketData?.receiveremail ||
             msg.email === ticketData?.clientemail;
           const msgType = isSender ? "sender" : "receiver";
 
           return (
-           <div
+            <div
               className={`message-wrapper ${msgType}`}
               key={msg._id || msg.id || index}
             >
               <div className="message-area">
-              <p>{isSender ? sendername : receivername}</p>
-                <div>
+                <p className="sender-name">
+                  {isSender ? sendername : receivername}
+                </p>
+                <div className="sender-msg">
                   {msg?.message && <p>{msg.message}</p>}
                   {msg?.file && <FileMessage type={msgType} msg={msg} />}
                 </div>
