@@ -174,10 +174,12 @@ background-color: var(--background-color2);
   }
   .message-area{
   flex-direction: column;
+  margin-top: 20px;
 }
 .message-area .sender-name{
 width: 100%;
 border-right: none;
+margin-bottom: 10px;
 border-bottom: 2px solid rgba(219, 219, 219, 0.449) ;
 
 }
