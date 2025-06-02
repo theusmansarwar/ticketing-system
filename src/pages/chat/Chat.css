@@ -177,6 +177,8 @@ background-color: var(--background-color2);
 }
 .message-area .sender-name{
 width: 100%;
+border-right: none;
+border-bottom: 2px solid rgba(219, 219, 219, 0.449) ;
 
 }
 .message-area .sender-msg{
