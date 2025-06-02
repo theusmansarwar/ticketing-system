@@ -113,6 +113,12 @@ const Admin = () => {
             {ticketData?.subject}
           </p>
           <p>
+  <span>Status: </span>
+  <span style={{ color: ticketData?.status ? "green" : "orange" }}>
+    {ticketData?.status ? "Answered" : "Pending"}
+  </span>
+</p>
+          <p>
             <span>Created On: </span>
             {formatDate(ticketData?.createdAt)}
           </p>
