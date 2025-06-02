@@ -172,6 +172,17 @@ background-color: var(--background-color2);
     flex-direction: column;
     justify-content: flex-start;
   }
+  .message-area{
+  flex-direction: column;
+}
+.message-area .sender-name{
+width: 100%;
+
+}
+.message-area .sender-msg{
+width:100%;
+padding-bottom: 20px;
+}
  .chat-header {
     width: 100%;
     margin: 0%;
