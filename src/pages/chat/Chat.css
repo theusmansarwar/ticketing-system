@@ -31,6 +31,14 @@ font-size: 24px;
 
 
 }
+.chat-header img{
+  width: 70%;
+  display: flex;
+  align-self: center;
+  justify-self: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
 .chat-header .header-right {
   border-top: 1px solid var(--background-color);
   padding-left: 10px;

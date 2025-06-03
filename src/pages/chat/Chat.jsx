@@ -1,13 +1,12 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./Chat.css";
-import { MdClose, MdSend } from "react-icons/md";
+import { MdClose } from "react-icons/md";
 import FileMessage from "../../components/file/FileMessage";
-import { IoMdAdd } from "react-icons/io";
 import { useParams } from "react-router-dom";
 import { fetchTicket } from "../../DAL/fetch";
 import { formatDate } from "../../utils/formatDate";
 import { createMessage } from "../../DAL/create";
-
+import logo from '../../Accets/logo4.png'
 const Chat = () => {
   const { ticket_id } = useParams();
   const fileInputRef = useRef(null);
@@ -97,10 +96,14 @@ const [isSending, setIsSending] = useState(false);
     setIsSending(false); 
   }
   };
+  const firstSenderIndex = [...(ticketData?.chats || []), ...messages].findIndex(
+  (msg) => msg.senderemail === ticketData?.clientemail
+);
 
   return (
     <div className="chat-container">
       <div className="chat-header">
+         <img src={logo}/>
         <div className="header-left">
           <strong>Ticket#{ticketData?.ticketNO}</strong>
         </div>
@@ -154,7 +157,7 @@ const [isSending, setIsSending] = useState(false);
   className={`send-btn ${isSending ? "disabled" : ""}`}
   onClick={!isSending ? handleSendMessage : undefined}
 >
-  {isSending ? "Sending..." : "Send Message"}
+  {isSending ? "Sending..." : "Send Reply"}
 </div>
         </div>
 
@@ -178,8 +181,10 @@ const [isSending, setIsSending] = useState(false);
                   {msg?.file && <FileMessage type={msgType} msg={msg} />}
                 </div>
               </div>
-
-              <p className="time">Replied : {formatDate(msg?.createdAt)}</p>
+ 
+          
+       
+              <p className="time"> {isSender && index === firstSenderIndex ? "Sent: " : "Replied :" } {formatDate(msg?.createdAt)}</p>
             </div>
           );
         })}

@@ -1,13 +1,13 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./Chat.css";
-import { MdClose, MdSend } from "react-icons/md";
+import { MdClose } from "react-icons/md";
 import FileMessage from "../../components/file/FileMessage";
-import { IoMdAdd } from "react-icons/io";
+
 import { useParams } from "react-router-dom";
 import { fetchTicket } from "../../DAL/fetch";
 import { formatDate } from "../../utils/formatDate";
 import { createMessage } from "../../DAL/create";
-
+import logo from '../../Accets/logo4.png'
 const Admin = () => {
   const { ticket_id } = useParams();
   const fileInputRef = useRef(null);
@@ -101,6 +101,7 @@ const Admin = () => {
   return (
     <div className="chat-container">
       <div className="chat-header">
+        <img src={logo}/>
         <div className="header-left">
           <strong>Ticket#{ticketData?.ticketNO}</strong>
         </div>
@@ -155,7 +156,7 @@ const Admin = () => {
             className={`send-btn ${isSending ? "disabled" : ""}`}
             onClick={!isSending ? handleSendMessage : undefined}
           >
-            {isSending ? "Sending..." : "Send Message"}
+            {isSending ? "Sending..." : "Send Reply"}
           </div>
         </div>
 
