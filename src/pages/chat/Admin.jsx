@@ -12,6 +12,7 @@ const Admin = () => {
   const { ticket_id } = useParams();
   const fileInputRef = useRef(null);
   const bottomRef = useRef(null);
+  const [isSending, setIsSending] = useState(false);
 
   const [selectedFile, setSelectedFile] = useState(null);
   const [messageInput, setMessageInput] = useState("");
@@ -28,10 +29,10 @@ const Admin = () => {
     }
   };
 
-   const userEmail = ticketData?.receiveremail;
+  const userEmail = ticketData?.receiveremail;
   const receiverEmail = ticketData?.clientemail;
-  const receivername=ticketData?.clientname;
-  
+  const receivername = ticketData?.clientname;
+
   const sendername = ticketData?.receivername;
 
   useEffect(() => {
@@ -41,8 +42,6 @@ const Admin = () => {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, ticketData]);
-
- 
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -56,48 +55,50 @@ const Admin = () => {
     fileInputRef.current.value = null;
   };
 
- const handleSendMessage = async () => {
-  if (messageInput.trim() === "" && !selectedFile) return;
+  const handleSendMessage = async () => {
+    if (messageInput.trim() === "" && !selectedFile) return;
+    setIsSending(true);
+    const formData = new FormData();
+    formData.append("TicketId", ticket_id);
+    formData.append("senderemail", userEmail);
+    formData.append("receiveremail", receiverEmail);
+    formData.append("message", messageInput);
+    formData.append("receivername", receivername);
 
-  const formData = new FormData();
-  formData.append("TicketId", ticket_id);
-  formData.append("senderemail", userEmail);
-  formData.append("receiveremail", receiverEmail);
-  formData.append("message", messageInput);
-  formData.append("receivername", receivername);
-
-  if (selectedFile) {
-    formData.append("file", selectedFile);
-    formData.append("fileName", selectedFile.name);
-  }
-
-  try {
-    await createMessage(formData);
-
-    const newMessage = {
-      id: Date.now(),
-      message: messageInput.trim(),
-      senderemail: userEmail,
-      file: selectedFile || null,
-      fileName: selectedFile?.name || null,
-      createdAt: new Date().toISOString(),
-    };
-
-    setMessages((prev) => [...prev, newMessage]);
-
-    // ✅ Clear both text and file
-    setMessageInput("");
-    setSelectedFile(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = null;
+    if (selectedFile) {
+      formData.append("file", selectedFile);
+      formData.append("fileName", selectedFile.name);
     }
-  } catch (error) {
-    console.error("Error sending message:", error);
-  }
-};
 
+    try {
+      await createMessage(formData);
 
- return (
+      const newMessage = {
+        id: Date.now(),
+        message: messageInput.trim(),
+        senderemail: userEmail,
+        file: selectedFile || null,
+        fileName: selectedFile?.name || null,
+        createdAt: new Date().toISOString(),
+      };
+
+      setMessages((prev) => [...prev, newMessage]);
+
+      // ✅ Clear both text and file
+      setMessageInput("");
+      setSelectedFile(null);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = null;
+      }
+    } catch (error) {
+      console.error("Error sending message:", error);
+      setIsSending(false);
+    } finally {
+      setIsSending(false);
+    }
+  };
+
+  return (
     <div className="chat-container">
       <div className="chat-header">
         <div className="header-left">
@@ -113,16 +114,19 @@ const Admin = () => {
             {ticketData?.subject}
           </p>
           <p>
-  <span>Status: </span>
-  <span style={{ color: ticketData?.status ? "green" : "orange" ,
-          background: ticketData?.status  ? "#d4edda" : "#fff3cd",
-           padding: "5px 10px",
-          minWidth: "100px",
-          borderRadius: "6px",
-  }}>
-    {ticketData?.status ? "Answered" : "Pending"}
-  </span>
-</p>
+            <span>Status: </span>
+            <span
+              style={{
+                color: ticketData?.status ? "green" : "orange",
+                background: ticketData?.status ? "#d4edda" : "#fff3cd",
+                padding: "5px 10px",
+                minWidth: "100px",
+                borderRadius: "6px",
+              }}
+            >
+              {ticketData?.status ? "Answered" : "Pending"}
+            </span>
+          </p>
           <p>
             <span>Created On: </span>
             {formatDate(ticketData?.createdAt)}
@@ -136,7 +140,6 @@ const Admin = () => {
             placeholder="Type your message here..."
             value={messageInput}
             onChange={(e) => setMessageInput(e.target.value)}
-           
           />
           <div className="file-input">
             <input type="file" ref={fileInputRef} onChange={handleFileChange} />
@@ -148,8 +151,11 @@ const Admin = () => {
             )}
           </div>
 
-          <div className="send-btn" onClick={handleSendMessage}>
-            Send Message
+          <div
+            className={`send-btn ${isSending ? "disabled" : ""}`}
+            onClick={!isSending ? handleSendMessage : undefined}
+          >
+            {isSending ? "Sending..." : "Send Message"}
           </div>
         </div>
 

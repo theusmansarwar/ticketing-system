@@ -12,6 +12,7 @@ const Chat = () => {
   const { ticket_id } = useParams();
   const fileInputRef = useRef(null);
   const bottomRef = useRef(null);
+const [isSending, setIsSending] = useState(false);
 
   const [selectedFile, setSelectedFile] = useState(null);
   const [messageInput, setMessageInput] = useState("");
@@ -55,7 +56,7 @@ const Chat = () => {
 
   const handleSendMessage = async () => {
     if (messageInput.trim() === "" && !selectedFile) return;
-
+  setIsSending(true);
     const formData = new FormData();
     formData.append("TicketId", ticket_id);
     formData.append("senderemail", userEmail);
@@ -90,7 +91,11 @@ const Chat = () => {
       }
     } catch (error) {
       console.error("Error sending message:", error);
+      setIsSending(false); 
     }
+    finally {
+    setIsSending(false); 
+  }
   };
 
   return (
@@ -145,9 +150,12 @@ const Chat = () => {
             )}
           </div>
 
-          <div className="send-btn" onClick={handleSendMessage}>
-            Send Message
-          </div>
+          <div
+  className={`send-btn ${isSending ? "disabled" : ""}`}
+  onClick={!isSending ? handleSendMessage : undefined}
+>
+  {isSending ? "Sending..." : "Send Message"}
+</div>
         </div>
 
         {[...(ticketData?.chats || []), ...messages].map((msg, index) => {
