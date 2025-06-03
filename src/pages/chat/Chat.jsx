@@ -110,7 +110,13 @@ const Chat = () => {
           </p>
           <p>
   <span>Status: </span>
-  <span style={{ color: ticketData?.status ? "green" : "orange" }}>
+  <span style={{ color: ticketData?.status ? "green" : "orange",
+    
+          background: ticketData?.status  ? "#d4edda" : "#fff3cd",
+             padding: "5px 10px",
+          minWidth: "100px",
+          borderRadius: "6px",
+   }}>
     {ticketData?.status ? "Answered" : "Pending"}
   </span>
 </p>

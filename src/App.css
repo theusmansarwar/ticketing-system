@@ -1,5 +1,5 @@
 :root {
-  --primary-color: #f5f5f5db;
+  --primary-color: #faf8f887;
   --primary-color2: #123458b3;
   --secondary-color: #D4C9BE;
   --background-color: #00d0e7;
@@ -10,7 +10,7 @@
   --shadow-low1: #00d0e74a;
   --shadow-low2: #006bcf00;
   --shadow-low3: #91f3fe;
-  --default-box-shadow: 0 0 2px #00000095;
+  --default-box-shadow: 0 0 2px #00000072;
   --left-space: 3%;
   --mid-space: 94%;
   --right-space: 3%;
