@@ -133,9 +133,7 @@ const Chat = () => {
             placeholder="Type your message here..."
             value={messageInput}
             onChange={(e) => setMessageInput(e.target.value)}
-            onKeyDown={(e) =>
-              e.key === "Enter" && !e.shiftKey && handleSendMessage()
-            }
+           
           />
           <div className="file-input">
             <input type="file" ref={fileInputRef} onChange={handleFileChange} />
