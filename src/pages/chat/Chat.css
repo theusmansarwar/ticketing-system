@@ -182,11 +182,13 @@ width: 25%;
 border-right: 2px solid rgba(219, 219, 219, 0.449) ;
 height: fit-content;
 padding: 10px 5px;
-font-weight: 700px;
+font-weight: 700;
+font-size: 14px;
 }
 .message-area .sender-msg{
 width: 73%;
 padding-bottom: 20px;
+font-size: 14px;
 }
 
 .message-wrapper.sender {
