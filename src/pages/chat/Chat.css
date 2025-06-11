@@ -4,12 +4,18 @@
   display: flex;
   justify-content: space-between;
   gap: 2%;
-  padding: 40px 10%;
+  padding: 0px 10%;
 
 }
-.chat-header {
-  background-color: white;
+.chat-header-area {
 width: 30%;
+
+
+ 
+}
+.chat-header{
+  background-color: white;
+width: 100%;
   height: fit-content;
 
   gap: 30px;
@@ -68,7 +74,6 @@ font-size: 24px;
 }
 .chat-send-section{
   width: 100%;
-  padding: 10px;
   margin-bottom: 20px;
   background-color: white;
    box-shadow: var(--default-box-shadow);
@@ -80,27 +85,45 @@ font-size: 24px;
   background-color: var(--primary-color);
   outline: none;
   border: none;
-  width: 100%;
+  width: calc(100% - 40px);
   padding: 10px;
   border-radius: var(--default-border-radius);
-  margin-bottom: 10px;
+  margin:20px;
   
   height: 200px;             
  resize: vertical;          /* Allow vertical resize only */
   overflow-x: hidden;        /* Hide horizontal scrollbar if any */
   box-sizing: border-box;  
 }
-.chat-send-section .send-btn{
- background-color: var(--background-color);
- margin-top: 10px;
+.chat-send-section .btn-area {
+
+  background-color:rgba(237, 237, 237, 0.619);
+
+  padding: 10px 20px;
+  border-bottom-right-radius: var(--default-border-radius);
+  border-bottom-left-radius: var(--default-border-radius);
+  margin-top: 10px;
+}
+.Heading{
   width: 100%;
-  padding: 10px;
+  font-size: 20px;
+margin-top: 40px;
+margin-bottom: 10px;
+}
+.chat-send-section .btn-area .send-btn{
+ background-color: var(--background-color);
+
+  width: fit-content;
+  color: var(--text-color);
+  display: flex;
+  justify-self: flex-end;
+  padding: 5px 10px;
   border: 1px solid var(--background-color);
   border-radius: var(--default-border-radius);
   display: flex;
   justify-content: center;
 }
-.chat-send-section .send-btn:hover {
+.chat-send-section .btn-area .send-btn:hover {
   color: var(--background-color);
   background-color: transparent;
   cursor: pointer;
@@ -122,22 +145,29 @@ font-size: 24px;
 }
 .file-input{
   display: flex;
-  width: fit-content;
+   width: calc(100% - 40px);
+   margin: 0px 20px;
+   padding: 10px;
+   border-radius: var(--default-border-radius);
+   border: 1px solid rgba(219, 219, 219, 0.352);
   align-items: center;
 }
 .file-input input{
   width: fit-content;
   max-width: 300px;
+  
 }
 .cancel-btn{
   background-color: red;
-  width: 25px;
-  height: 25px;
+  color: white;
+
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-
+cursor: pointer;
 }
 .message-area{
   display: flex;
@@ -182,6 +212,13 @@ background-color: var(--background-color2);
   }
   .message-area{
   flex-direction: column;
+  
+}
+.chat-send-section textarea {
+
+  width: 100%;
+
+  margin:0px;
   
 }
 .message-area .sender-name{
@@ -230,4 +267,14 @@ margin-top: 20px;
   .file-name {
     max-width: 80%;
   }
+   .file-input {
+    width: 100%;
+    margin: 0%;
+   }
+  .file-input input{
+  width: fit-content;
+  max-width: 250px;
+
+  
+}
 }

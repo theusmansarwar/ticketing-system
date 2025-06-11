@@ -6,12 +6,12 @@ import { useParams } from "react-router-dom";
 import { fetchTicket } from "../../DAL/fetch";
 import { formatDate } from "../../utils/formatDate";
 import { createMessage } from "../../DAL/create";
-import logo from '../../Accets/logo4.png'
+import logo from "../../Accets/logo4.png";
 const Chat = () => {
   const { ticket_id } = useParams();
   const fileInputRef = useRef(null);
   const bottomRef = useRef(null);
-const [isSending, setIsSending] = useState(false);
+  const [isSending, setIsSending] = useState(false);
 
   const [selectedFile, setSelectedFile] = useState(null);
   const [messageInput, setMessageInput] = useState("");
@@ -55,7 +55,7 @@ const [isSending, setIsSending] = useState(false);
 
   const handleSendMessage = async () => {
     if (messageInput.trim() === "" && !selectedFile) return;
-  setIsSending(true);
+    setIsSending(true);
     const formData = new FormData();
     formData.append("TicketId", ticket_id);
     formData.append("senderemail", userEmail);
@@ -90,58 +90,63 @@ const [isSending, setIsSending] = useState(false);
       }
     } catch (error) {
       console.error("Error sending message:", error);
-      setIsSending(false); 
+      setIsSending(false);
+    } finally {
+      setIsSending(false);
     }
-    finally {
-    setIsSending(false); 
-  }
   };
-  const firstSenderIndex = [...(ticketData?.chats || []), ...messages].findIndex(
-  (msg) => msg.senderemail === ticketData?.clientemail
-);
+  const firstSenderIndex = [
+    ...(ticketData?.chats || []),
+    ...messages,
+  ].findIndex((msg) => msg.senderemail === ticketData?.clientemail);
 
   return (
     <div className="chat-container">
-      <div className="chat-header">
-         <img src={logo}/>
-        <div className="header-left">
-          <strong>Ticket#{ticketData?.ticketNO}</strong>
-        </div>
-        <div className="header-right">
-          <p>
-            <span>Contact: </span>
-            {ticketData?.receivername}
-          </p>
-          <p>
-            <span>Service: </span>
-            {ticketData?.subject}
-          </p>
-          <p>
-  <span>Status: </span>
-  <span style={{ color: ticketData?.status ? "green" : "orange",
-    
-          background: ticketData?.status  ? "#d4edda" : "#fff3cd",
-             padding: "5px 10px",
-          minWidth: "100px",
-          borderRadius: "6px",
-   }}>
-    {ticketData?.status ? "Answered" : "Pending"}
-  </span>
-</p>
-          <p>
-            <span>Created On: </span>
-            {formatDate(ticketData?.createdAt)}
-          </p>
+      <div className="chat-header-area">
+        <p className="Heading">Ticket Information</p>
+        <div className="chat-header">
+          <img src={logo} />
+          <div className="header-left">
+            <strong>#{ticketData?.ticketNO}</strong>
+          </div>
+          <div className="header-right">
+            <p>
+              <span>Contact: </span>
+              {ticketData?.receivername}
+            </p>
+            <p>
+              <span>Service: </span>
+              {ticketData?.subject}
+            </p>
+            <p>
+              <span>Status: </span>
+              <span
+                style={{
+                  color: ticketData?.status ? "green" : "orange",
+
+                  background: ticketData?.status ? "#d4edda" : "#fff3cd",
+                  padding: "5px 10px",
+                  minWidth: "100px",
+                  borderRadius: "6px",
+                }}
+              >
+                {ticketData?.status ? "Answered" : "Pending"}
+              </span>
+            </p>
+            <p>
+              <span>Created On: </span>
+              {formatDate(ticketData?.createdAt)}
+            </p>
+          </div>
         </div>
       </div>
-
       <div className="chat-area">
+        <p className="Heading">Add reply to this ticket</p>
         <div className="chat-send-section">
           <textarea
             placeholder="Type your message here..."
             value={messageInput}
             onChange={(e) => setMessageInput(e.target.value)}
-           
           />
           <div className="file-input">
             <input type="file" ref={fileInputRef} onChange={handleFileChange} />
@@ -152,13 +157,14 @@ const [isSending, setIsSending] = useState(false);
               </div>
             )}
           </div>
-
-          <div
-  className={`send-btn ${isSending ? "disabled" : ""}`}
-  onClick={!isSending ? handleSendMessage : undefined}
->
-  {isSending ? "Sending..." : "Send Reply"}
-</div>
+          <div className="btn-area">
+            <div
+              className={`send-btn ${isSending ? "disabled" : ""}`}
+              onClick={!isSending ? handleSendMessage : undefined}
+            >
+              {isSending ? "Sending..." : "Send Reply"}
+            </div>
+          </div>
         </div>
 
         {[...(ticketData?.chats || []), ...messages].map((msg, index) => {
@@ -181,10 +187,14 @@ const [isSending, setIsSending] = useState(false);
                   {msg?.file && <FileMessage type={msgType} msg={msg} />}
                 </div>
               </div>
- 
-          
-       
-              <p className="time"> {isSender && index === firstSenderIndex ? "Sent: " : "Replied :" } {formatDate(msg?.createdAt)}</p>
+
+              <p className="time">
+                {" "}
+                {isSender && index === firstSenderIndex
+                  ? "Sent: "
+                  : "Replied :"}{" "}
+                {formatDate(msg?.createdAt)}
+              </p>
             </div>
           );
         })}

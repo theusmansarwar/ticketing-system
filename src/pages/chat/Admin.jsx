@@ -100,10 +100,12 @@ const Admin = () => {
 
   return (
     <div className="chat-container">
+      <div className="chat-header-area">
+        <p className="Heading">Ticket Information</p>
       <div className="chat-header">
         <img src={logo}/>
         <div className="header-left">
-          <strong>Ticket#{ticketData?.ticketNO}</strong>
+          <strong>#{ticketData?.ticketNO}</strong>
         </div>
         <div className="header-right">
           <p>
@@ -134,8 +136,9 @@ const Admin = () => {
           </p>
         </div>
       </div>
-
+</div>
       <div className="chat-area">
+        <p className="Heading">Add reply to this ticket</p>
         <div className="chat-send-section">
           <textarea
             placeholder="Type your message here..."
@@ -151,12 +154,13 @@ const Admin = () => {
               </div>
             )}
           </div>
-
+<div className="btn-area">
           <div
             className={`send-btn ${isSending ? "disabled" : ""}`}
             onClick={!isSending ? handleSendMessage : undefined}
           >
             {isSending ? "Sending..." : "Send Reply"}
+          </div>
           </div>
         </div>
 
