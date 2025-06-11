@@ -33,7 +33,7 @@ margin: 20px 0px;
 }
 .chat-header .header-left strong {
   color: var(--background-color);
-font-size: 24px;
+font-size: 14px;
 
 
 }
@@ -51,7 +51,7 @@ font-size: 24px;
 }
 .chat-header .header-right p {
   color: rgb(0, 0, 0);
-  font-size:18px;
+  font-size:14px;
   padding: 10px 0px;
   border-bottom: 1px solid rgba(219, 219, 219, 0.352);
 }
@@ -109,6 +109,7 @@ font-size: 24px;
   font-size: 20px;
 margin-top: 40px;
 margin-bottom: 10px;
+font-weight: 700;
 }
 .chat-send-section .btn-area .send-btn{
  background-color: var(--background-color);
@@ -170,6 +171,7 @@ margin-bottom: 10px;
 cursor: pointer;
 }
 .message-area{
+  font-size: 14px;
   display: flex;
   width: 100%;
   gap:2%
