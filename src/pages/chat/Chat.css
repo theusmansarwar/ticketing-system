@@ -62,7 +62,7 @@ font-weight: 700;
 }
 .chat-header .header-right p span {
   color: var(--background-color);
-  
+  font-weight: 700;
 }
 
 .chat-area {
