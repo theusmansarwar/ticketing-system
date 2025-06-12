@@ -3,6 +3,7 @@ import "./Chat.css";
 import { MdClose } from "react-icons/md";
 import FileMessage from "../../components/file/FileMessage";
 
+import { FaArrowUp, FaArrowDown  } from "react-icons/fa6";
 import { useParams } from "react-router-dom";
 import { fetchTicket } from "../../DAL/fetch";
 import { formatDate } from "../../utils/formatDate";
