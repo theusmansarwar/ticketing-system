@@ -9,6 +9,7 @@ import { fetchTicket } from "../../DAL/fetch";
 import { formatDate } from "../../utils/formatDate";
 import { createMessage } from "../../DAL/create";
 import logo from '../../Accets/logo4.png'
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 const Admin = () => {
   const { ticket_id } = useParams();
   const fileInputRef = useRef(null);
@@ -20,7 +21,13 @@ const Admin = () => {
   const [messageInput, setMessageInput] = useState("");
   const [messages, setMessages] = useState([]);
   const [ticketData, setTicketData] = useState(null);
-
+ const [expandedMessages, setExpandedMessages] = useState({});
+  const toggleExpand = (key) => {
+    setExpandedMessages((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
+  };
   const loadTicket = async () => {
     try {
       const res = await fetchTicket(ticket_id);
@@ -116,9 +123,9 @@ const Admin = () => {
         <p className="Heading">Ticket Information</p>
       <div className="chat-header">
 
-        <img src={logo}/>
+        {/* <img src={logo}/> */}
         <div className="header-left">
-          <strong>#{ticketData?.ticketNO}</strong>
+          <strong>Ticket Number #{ticketData?.ticketNO}</strong>
         </div>
         <div className="header-right">
           <p>
@@ -133,11 +140,13 @@ const Admin = () => {
             <span>Status: </span>
             <span
               style={{
-                color: ticketData?.status ? "green" : "orange",
-                background: ticketData?.status ? "#d4edda" : "#fff3cd",
-                padding: "5px 10px",
-                minWidth: "100px",
-                borderRadius: "6px",
+                color:"white",
+
+                  background: ticketData?.status ? "blue" : "	#FFBF00",
+                  padding: "5px",
+                  minWidth: "100px",
+                  borderRadius: "4px",
+                  fontSize:"12px"
               }}
             >
               {ticketData?.status ? "Answered" : "Pending"}
@@ -192,11 +201,57 @@ const Admin = () => {
                 <p className="sender-name">
                   {isSender ? sendername : receivername}
                 </p>
-                <div className="sender-msg">
-                  {msg?.message && <p>{msg.message}</p>}
-                  {msg?.file && <FileMessage type={msgType} msg={msg} />}
+                  <div className="sender-msg">
+                    {msg?.message && (
+                      <>
+                        <p>
+                          {expandedMessages[msg._id || msg.id || index]
+                            ? msg.message
+                            : msg.message.length > 400
+                            ? msg.message.slice(0, 400) + "..."
+                            : msg.message}
+                        </p>
+                        {msg?.file && <FileMessage type={msgType} msg={msg} />}
+                      </>
+                    )}
+                  </div>
                 </div>
-              </div>
+                {msg.message.length > 400 && (
+                  <div
+                    className={`showmore-btn-area ${
+                      isSender
+                        ? expandedMessages[msg._id || msg.id || index]
+                          ? "expanded"
+                          : ""
+                        : expandedMessages[msg._id || msg.id || index]
+                        ? "expanded"
+                        : "closed"
+                    }`}
+                  >
+                    <button
+                      onClick={() => toggleExpand(msg._id || msg.id || index)}
+                      style={{
+                        background: "var(--background-color)",
+                        color: "#fff",
+                        border: "none",
+                        padding: "5px 10px",
+                        borderRadius: "4px",
+                        cursor: "pointer",
+                        fontSize: "12px",
+                      }}
+                    >
+                      {expandedMessages[msg._id || msg.id || index] ? (
+                        <div className="dropbtn">
+                          Show Less <FaChevronUp />
+                        </div>
+                      ) : (
+                        <div className="dropbtn">
+                          Show More <FaChevronDown />
+                        </div>
+                      )}
+                    </button>
+                  </div>
+                )}
 
               <p className="time">Replied : {formatDate(msg?.createdAt)}</p>
             </div>

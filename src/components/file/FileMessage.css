@@ -31,9 +31,16 @@ margin-top: 10px;
 }
 @media (max-width: 900px) {
   .file-message {
- max-width: 250px;
+ max-width: 150px;
  display: flex;
- justify-self: center;
+ justify-self: left;
+   padding: 6px 10px;
+}
+.file-message span{
+  font-size: 12px;
+}
+.file-message svg {
+ font-size: 12px;
 }
 }
 

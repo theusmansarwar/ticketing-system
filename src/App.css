@@ -1,16 +1,16 @@
 :root {
-  --primary-color: #faf8f887;
+  --primary-color: #f8fafc;
   --primary-color2: #123458b3;
   --secondary-color: #D4C9BE;
-  --background-color: #00d0e7;
+  --background-color: #3a3f42;
   --background-color2:rgb(255, 255, 255);
-  --background-color3:rgba(221, 251, 254, 0.373);
+  --background-color3:#f2eafa;
   --default-icon-size:24px;
   --headings-color: var(--background-color);
   --shadow-low1: #00d0e74a;
   --shadow-low2: #006bcf00;
   --shadow-low3: #91f3fe;
-  --default-box-shadow: 0 0 2px #00000072;
+  --default-box-shadow: 0 0 3px #0000005e;
   --left-space: 3%;
   --mid-space: 94%;
   --right-space: 3%;
@@ -19,7 +19,7 @@
   --font-family-base: var(--font-montserrat);
   --default-p-size: 16px;
   --default-time-size:10px;
-  --default-border-radius: 2px;
+  --default-border-radius: 6px;
   --gradient-one: linear-gradient(to bottom right, #e7e7e725, #000000);
 }
 .bg-wrapper {
