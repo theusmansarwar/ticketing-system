@@ -7,10 +7,12 @@ import { fetchTicket } from "../../DAL/fetch";
 import { formatDate } from "../../utils/formatDate";
 import { createMessage } from "../../DAL/create";
 import logo from "../../Accets/logo4.png";
+import { FaArrowUp, FaArrowDown  } from "react-icons/fa6";
 const Chat = () => {
   const { ticket_id } = useParams();
   const fileInputRef = useRef(null);
   const bottomRef = useRef(null);
+    const topRef = useRef(null);
   const [isSending, setIsSending] = useState(false);
 
   const [selectedFile, setSelectedFile] = useState(null);
@@ -38,9 +40,17 @@ const Chat = () => {
   }, [ticket_id]);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  scrollToBottom();
   }, [messages, ticketData]);
 
+
+    const scrollToTop = () => {
+    topRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const scrollToBottom = () => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -101,8 +111,11 @@ const Chat = () => {
   ].findIndex((msg) => msg.senderemail === ticketData?.clientemail);
 
   return (
+    <>
     <div className="chat-container">
+
       <div className="chat-header-area">
+           <div ref={topRef} />
         <p className="Heading">Ticket Information</p>
         <div className="chat-header">
           <img src={logo} />
@@ -141,6 +154,7 @@ const Chat = () => {
         </div>
       </div>
       <div className="chat-area">
+     
         <p className="Heading">Add reply to this ticket</p>
         <div className="chat-send-section">
           <textarea
@@ -202,6 +216,12 @@ const Chat = () => {
         <div ref={bottomRef} />
       </div>
     </div>
+    <div className="navigationbtn">
+    <div className="top-btn" onClick={scrollToTop}><FaArrowUp/></div>
+    <div className="bottom-btn" onClick={scrollToBottom}><FaArrowDown /></div>
+    </div>
+     <div className="footer">Copyright © 2021-2025 Plutosec.ca All right reserved</div>
+     </>
   );
 };
 

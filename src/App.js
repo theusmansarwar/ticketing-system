@@ -13,7 +13,9 @@ const App = () => {
           <Route path="/ticket/:ticket_id" element={<Chat />} />
            <Route path="/ticketviewbyadmin/:ticket_id" element={<Admin />} />
         </Routes>
+        
       </div>
+      
     </Router>
   );
 };

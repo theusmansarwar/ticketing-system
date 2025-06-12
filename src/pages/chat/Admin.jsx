@@ -99,6 +99,7 @@ const Admin = () => {
   };
 
   return (
+    <>
     <div className="chat-container">
       <div className="chat-header-area">
         <p className="Heading">Ticket Information</p>
@@ -193,6 +194,8 @@ const Admin = () => {
         <div ref={bottomRef} />
       </div>
     </div>
+     <div className="footer">Copyright © 2021-2025 Plutosec.ca All right reserved</div>
+     </>
   );
 };
 
