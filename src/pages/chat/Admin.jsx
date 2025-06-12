@@ -12,6 +12,7 @@ const Admin = () => {
   const { ticket_id } = useParams();
   const fileInputRef = useRef(null);
   const bottomRef = useRef(null);
+    const topRef = useRef(null);
   const [isSending, setIsSending] = useState(false);
 
   const [selectedFile, setSelectedFile] = useState(null);
@@ -40,9 +41,17 @@ const Admin = () => {
   }, [ticket_id]);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  scrollToBottom();
   }, [messages, ticketData]);
 
+
+    const scrollToTop = () => {
+    topRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const scrollToBottom = () => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -102,8 +111,10 @@ const Admin = () => {
     <>
     <div className="chat-container">
       <div className="chat-header-area">
+          <div ref={topRef} />
         <p className="Heading">Ticket Information</p>
       <div className="chat-header">
+
         <img src={logo}/>
         <div className="header-left">
           <strong>#{ticketData?.ticketNO}</strong>
@@ -194,6 +205,10 @@ const Admin = () => {
         <div ref={bottomRef} />
       </div>
     </div>
+     <div className="navigationbtn">
+        <div className="top-btn" onClick={scrollToTop}><FaArrowUp/></div>
+        <div className="bottom-btn" onClick={scrollToBottom}><FaArrowDown /></div>
+        </div>
      <div className="footer">Copyright © 2021-2025 Plutosec.ca All right reserved</div>
      </>
   );
