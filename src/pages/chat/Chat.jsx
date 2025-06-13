@@ -167,12 +167,20 @@ const Chat = () => {
               value={messageInput}
               onChange={(e) => setMessageInput(e.target.value)}
             />
-            <div className="file-input">
+            <div className="file-input-wrapper">
               <input
                 type="file"
+                id="customFile"
                 ref={fileInputRef}
                 onChange={handleFileChange}
+                style={{ display: "none" }}
               />
+              <label htmlFor="customFile" className="custom-file-label">
+                Choose File
+              </label>
+              <span className="file-name">
+                {selectedFile ? selectedFile.name : "No file chosen"}
+              </span>
 
               {selectedFile && (
                 <div className="cancel-btn" onClick={handleRemoveFile}>
@@ -180,6 +188,7 @@ const Chat = () => {
                 </div>
               )}
             </div>
+
             <div className="btn-area">
               <div
                 className={`send-btn ${isSending ? "disabled" : ""}`}

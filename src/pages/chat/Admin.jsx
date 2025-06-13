@@ -3,25 +3,25 @@ import "./Chat.css";
 import { MdClose } from "react-icons/md";
 import FileMessage from "../../components/file/FileMessage";
 
-import { FaArrowUp, FaArrowDown  } from "react-icons/fa6";
+import { FaArrowUp, FaArrowDown } from "react-icons/fa6";
 import { useParams } from "react-router-dom";
 import { fetchTicket } from "../../DAL/fetch";
 import { formatDate } from "../../utils/formatDate";
 import { createMessage } from "../../DAL/create";
-import logo from '../../Accets/logo4.png'
+import logo from "../../Accets/logo4.png";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 const Admin = () => {
   const { ticket_id } = useParams();
   const fileInputRef = useRef(null);
   const bottomRef = useRef(null);
-    const topRef = useRef(null);
+  const topRef = useRef(null);
   const [isSending, setIsSending] = useState(false);
 
   const [selectedFile, setSelectedFile] = useState(null);
   const [messageInput, setMessageInput] = useState("");
   const [messages, setMessages] = useState([]);
   const [ticketData, setTicketData] = useState(null);
- const [expandedMessages, setExpandedMessages] = useState({});
+  const [expandedMessages, setExpandedMessages] = useState({});
   const toggleExpand = (key) => {
     setExpandedMessages((prev) => ({
       ...prev,
@@ -49,16 +49,15 @@ const Admin = () => {
   }, [ticket_id]);
 
   useEffect(() => {
-  scrollToBottom();
+    scrollToBottom();
   }, [messages, ticketData]);
 
-
-    const scrollToTop = () => {
-    topRef.current?.scrollIntoView({ behavior: 'smooth' });
+  const scrollToTop = () => {
+    topRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   const scrollToBottom = () => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   };
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -117,90 +116,101 @@ const Admin = () => {
 
   return (
     <>
-    <div className="chat-container">
-      <div className="chat-header-area">
+      <div className="chat-container">
+        <div className="chat-header-area">
           <div ref={topRef} />
-        <p className="Heading">Ticket Information</p>
-      <div className="chat-header">
+          <p className="Heading">Ticket Information</p>
+          <div className="chat-header">
+            {/* <img src={logo}/> */}
+            <div className="header-left">
+              <strong>Ticket Number #{ticketData?.ticketNO}</strong>
+            </div>
+            <div className="header-right">
+              <p>
+                <span>Contact: </span>
+                {ticketData?.clientname}
+              </p>
+              <p>
+                <span>Service: </span>
+                {ticketData?.subject}
+              </p>
+              <p>
+                <span>Status: </span>
+                <span
+                  style={{
+                    color: "white",
 
-        {/* <img src={logo}/> */}
-        <div className="header-left">
-          <strong>Ticket Number #{ticketData?.ticketNO}</strong>
+                    background: ticketData?.status ? "blue" : "	#FFBF00",
+                    padding: "5px",
+                    minWidth: "100px",
+                    borderRadius: "4px",
+                    fontSize: "12px",
+                  }}
+                >
+                  {ticketData?.status ? "Answered" : "Pending"}
+                </span>
+              </p>
+              <p>
+                <span>Created On: </span>
+                {formatDate(ticketData?.createdAt)}
+              </p>
+            </div>
+          </div>
         </div>
-        <div className="header-right">
-          <p>
-            <span>Contact: </span>
-            {ticketData?.clientname}
-          </p>
-          <p>
-            <span>Service: </span>
-            {ticketData?.subject}
-          </p>
-          <p>
-            <span>Status: </span>
-            <span
-              style={{
-                color:"white",
+        <div className="chat-area">
+          <p className="Heading">Add reply to this ticket</p>
+          <div className="chat-send-section">
+            <textarea
+              placeholder="Type your message here..."
+              value={messageInput}
+              onChange={(e) => setMessageInput(e.target.value)}
+            />
+            <div className="file-input-wrapper">
+              <input
+                type="file"
+                id="customFile"
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                style={{ display: "none" }}
+              />
+              <label htmlFor="customFile" className="custom-file-label">
+                Choose File
+              </label>
+              <span className="file-name">
+                {selectedFile ? selectedFile.name : "No file chosen"}
+              </span>
 
-                  background: ticketData?.status ? "blue" : "	#FFBF00",
-                  padding: "5px",
-                  minWidth: "100px",
-                  borderRadius: "4px",
-                  fontSize:"12px"
-              }}
-            >
-              {ticketData?.status ? "Answered" : "Pending"}
-            </span>
-          </p>
-          <p>
-            <span>Created On: </span>
-            {formatDate(ticketData?.createdAt)}
-          </p>
-        </div>
-      </div>
-</div>
-      <div className="chat-area">
-        <p className="Heading">Add reply to this ticket</p>
-        <div className="chat-send-section">
-          <textarea
-            placeholder="Type your message here..."
-            value={messageInput}
-            onChange={(e) => setMessageInput(e.target.value)}
-          />
-          <div className="file-input">
-            <input type="file" ref={fileInputRef} onChange={handleFileChange} />
-
-            {selectedFile && (
-              <div className="cancel-btn" onClick={handleRemoveFile}>
-                <MdClose />
+              {selectedFile && (
+                <div className="cancel-btn" onClick={handleRemoveFile}>
+                  <MdClose />
+                </div>
+              )}
+            </div>
+            <div className="btn-area">
+              <div
+                className={`send-btn ${isSending ? "disabled" : ""}`}
+                onClick={!isSending ? handleSendMessage : undefined}
+              >
+                {isSending ? "Sending..." : "Send Reply"}
               </div>
-            )}
+            </div>
           </div>
-<div className="btn-area">
-          <div
-            className={`send-btn ${isSending ? "disabled" : ""}`}
-            onClick={!isSending ? handleSendMessage : undefined}
-          >
-            {isSending ? "Sending..." : "Send Reply"}
-          </div>
-          </div>
-        </div>
 
-        {[...(ticketData?.chats || []), ...messages].map((msg, index) => {
-          const isSender =
-            msg.senderemail === ticketData?.receiveremail ||
-            msg.email === ticketData?.clientemail;
-          const msgType = isSender ? "sender" : "receiver";
+          {[...(ticketData?.chats || []), ...messages].map((msg, index) => {
+            const isSender =
+              msg.senderemail === ticketData?.receiveremail ||
+              msg.email === ticketData?.clientemail;
+            const msgType = isSender ? "sender" : "receiver";
 
-          return (
-            <div
-              className={`message-wrapper ${msgType}`}
-              key={msg._id || msg.id || index}
-            >
-              <div className="message-area">
-                <p className="sender-name">
-                  {isSender ? sendername : receivername}
-                </p>
+            return (
+              <div
+                className={`message-wrapper ${msgType}`}
+                key={msg._id || msg.id || index}
+              >
+                <div className="message-area">
+                  <p className="sender-name">
+                    {isSender ? sendername : receivername}
+                  </p>
                   <div className="sender-msg">
                     {msg?.message && (
                       <>
@@ -253,20 +263,26 @@ const Admin = () => {
                   </div>
                 )}
 
-              <p className="time">Replied : {formatDate(msg?.createdAt)}</p>
-            </div>
-          );
-        })}
+                <p className="time">Replied : {formatDate(msg?.createdAt)}</p>
+              </div>
+            );
+          })}
 
-        <div ref={bottomRef} />
-      </div>
-    </div>
-     <div className="navigationbtn">
-        <div className="top-btn" onClick={scrollToTop}><FaArrowUp/></div>
-        <div className="bottom-btn" onClick={scrollToBottom}><FaArrowDown /></div>
+          <div ref={bottomRef} />
         </div>
-     <div className="footer">Copyright © 2021-2025 Plutosec.ca All right reserved</div>
-     </>
+      </div>
+      <div className="navigationbtn">
+        <div className="top-btn" onClick={scrollToTop}>
+          <FaArrowUp />
+        </div>
+        <div className="bottom-btn" onClick={scrollToBottom}>
+          <FaArrowDown />
+        </div>
+      </div>
+      <div className="footer">
+        Copyright © 2021-2025 Plutosec.ca All right reserved
+      </div>
+    </>
   );
 };
 
