@@ -178,7 +178,11 @@ const Admin = () => {
                 Choose File
               </label>
               <span className="file-name">
-                {selectedFile ? selectedFile.name : "No file chosen"}
+                {selectedFile
+                  ? selectedFile.name.length > 10
+                    ? selectedFile.name.slice(0, 10) + "..."
+                    : selectedFile.name
+                  : "No file chosen"}
               </span>
 
               {selectedFile && (
