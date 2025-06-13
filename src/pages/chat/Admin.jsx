@@ -165,6 +165,7 @@ const Admin = () => {
               value={messageInput}
               onChange={(e) => setMessageInput(e.target.value)}
             />
+            <p className="attach">Attachments</p>
             <div className="file-input-wrapper">
               <input
                 type="file"

@@ -167,6 +167,7 @@ const Chat = () => {
               value={messageInput}
               onChange={(e) => setMessageInput(e.target.value)}
             />
+            <p className="attach">Attachments</p>
             <div className="file-input-wrapper">
               <input
                 type="file"
@@ -179,7 +180,11 @@ const Chat = () => {
                 Choose File
               </label>
               <span className="file-name">
-                {selectedFile ? selectedFile.name : "No file chosen"}
+                {selectedFile
+                  ? selectedFile.name.length > 10
+                    ? selectedFile.name.slice(0, 10) + "..."
+                    : selectedFile.name
+                  : "No file chosen"}
               </span>
 
               {selectedFile && (
