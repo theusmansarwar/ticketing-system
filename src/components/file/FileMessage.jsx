@@ -1,26 +1,34 @@
 import React from "react";
 import "./FileMessage.css";
-import { IoCloudDownloadOutline } from "react-icons/io5";
-import { FaFile } from "react-icons/fa";
-import { formatDate } from "../../utils/formatDate";
+import { FaFileDownload } from "react-icons/fa";
 const baseUrl = "https://plutosec.ca/backend/api";
 const FileMessage = ({ type, msg }) => {
+  const handleClick = () => {
+    const fileUrl =
+      typeof msg?.file === "string"
+        ? baseUrl + msg.file
+        : URL.createObjectURL(msg.file);
+
+    const link = document.createElement("a");
+    link.href = fileUrl;
+    link.download = msg?.fileName || "download";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    if (typeof msg?.file !== "string") {
+      URL.revokeObjectURL(fileUrl);
+    }
+  };
+
   return (
-    <div className={`file-message ${type}`}>
-      <FaFile />
+    <div
+      className={`file-message ${type}`}
+      onClick={handleClick}
+      style={{ cursor: "pointer" }}
+    >
+      <FaFileDownload className="icon" />
       <span>{msg?.fileName}</span>
-      <a
-        href={
-          typeof msg?.file === "string"
-            ? baseUrl + msg.file
-            : URL.createObjectURL(msg.file)
-        }
-        download={msg?.fileName}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <IoCloudDownloadOutline style={{ cursor: "pointer" }} />
-      </a>
     </div>
   );
 };

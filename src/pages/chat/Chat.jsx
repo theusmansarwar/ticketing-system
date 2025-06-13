@@ -20,6 +20,7 @@ const Chat = () => {
   const [messageInput, setMessageInput] = useState("");
   const [messages, setMessages] = useState([]);
   const [ticketData, setTicketData] = useState(null);
+  const [error, setError]=useState("");
   const [expandedMessages, setExpandedMessages] = useState({});
   const toggleExpand = (key) => {
     setExpandedMessages((prev) => ({
@@ -70,24 +71,24 @@ const Chat = () => {
     fileInputRef.current.value = null;
   };
 
-  const handleSendMessage = async () => {
-    if (messageInput.trim() === "" && !selectedFile) return;
+ const handleSendMessage = async () => {
     setIsSending(true);
+      if (messageInput.trim() === "" ){
+      setError("Please Write Something");
+      setIsSending(false);
+    } else{
     const formData = new FormData();
     formData.append("TicketId", ticket_id);
     formData.append("senderemail", userEmail);
     formData.append("receiveremail", receiverEmail);
     formData.append("message", messageInput);
     formData.append("receivername", receivername);
-
     if (selectedFile) {
       formData.append("file", selectedFile);
       formData.append("fileName", selectedFile.name);
     }
-
     try {
       await createMessage(formData);
-
       const newMessage = {
         id: Date.now(),
         message: messageInput.trim(),
@@ -96,11 +97,10 @@ const Chat = () => {
         fileName: selectedFile?.name || null,
         createdAt: new Date().toISOString(),
       };
-
       setMessages((prev) => [...prev, newMessage]);
-
-      // ✅ Clear both text and file
+      // :white_check_mark: Clear both text and file
       setMessageInput("");
+      setError("");
       setSelectedFile(null);
       if (fileInputRef.current) {
         fileInputRef.current.value = null;
@@ -111,6 +111,7 @@ const Chat = () => {
     } finally {
       setIsSending(false);
     }
+      }
   };
   const firstSenderIndex = [
     ...(ticketData?.chats || []),
@@ -167,6 +168,7 @@ const Chat = () => {
               value={messageInput}
               onChange={(e) => setMessageInput(e.target.value)}
             />
+            {error && <p className="error">{error}</p>}
             <p className="attach">Attachments</p>
             <div className="file-input-wrapper">
               <input

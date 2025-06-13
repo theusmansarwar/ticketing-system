@@ -25,7 +25,7 @@ margin-top: 10px;
    color: black;
   border-left: 1px solid black;
 }
-.file-message svg {
+.file-message .icon {
   color: black;
   font-size: var(--default-icon-size);
 }
@@ -39,9 +39,11 @@ margin-top: 10px;
 .file-message span{
   font-size: 12px;
 }
-.file-message svg {
- font-size: 12px;
-}
+/* .file-message .icon {
+  color: black;
+  font-size: 50px;
+} */
+
 }
 
 

@@ -16,7 +16,7 @@ const Admin = () => {
   const bottomRef = useRef(null);
   const topRef = useRef(null);
   const [isSending, setIsSending] = useState(false);
-
+  const [error, setError] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [messageInput, setMessageInput] = useState("");
   const [messages, setMessages] = useState([]);
@@ -72,45 +72,49 @@ const Admin = () => {
   };
 
   const handleSendMessage = async () => {
-    if (messageInput.trim() === "" && !selectedFile) return;
     setIsSending(true);
-    const formData = new FormData();
-    formData.append("TicketId", ticket_id);
-    formData.append("senderemail", userEmail);
-    formData.append("receiveremail", receiverEmail);
-    formData.append("message", messageInput);
-    formData.append("receivername", receivername);
+    if (messageInput.trim() === "") {
+      setError("Please Write Something");
+      setIsSending(false);
+    } else {
+      const formData = new FormData();
+      formData.append("TicketId", ticket_id);
+      formData.append("senderemail", userEmail);
+      formData.append("receiveremail", receiverEmail);
+      formData.append("message", messageInput);
+      formData.append("receivername", receivername);
 
-    if (selectedFile) {
-      formData.append("file", selectedFile);
-      formData.append("fileName", selectedFile.name);
-    }
-
-    try {
-      await createMessage(formData);
-
-      const newMessage = {
-        id: Date.now(),
-        message: messageInput.trim(),
-        senderemail: userEmail,
-        file: selectedFile || null,
-        fileName: selectedFile?.name || null,
-        createdAt: new Date().toISOString(),
-      };
-
-      setMessages((prev) => [...prev, newMessage]);
-
-      // ✅ Clear both text and file
-      setMessageInput("");
-      setSelectedFile(null);
-      if (fileInputRef.current) {
-        fileInputRef.current.value = null;
+      if (selectedFile) {
+        formData.append("file", selectedFile);
+        formData.append("fileName", selectedFile.name);
       }
-    } catch (error) {
-      console.error("Error sending message:", error);
-      setIsSending(false);
-    } finally {
-      setIsSending(false);
+
+      try {
+        await createMessage(formData);
+
+        const newMessage = {
+          id: Date.now(),
+          message: messageInput.trim(),
+          senderemail: userEmail,
+          file: selectedFile || null,
+          fileName: selectedFile?.name || null,
+          createdAt: new Date().toISOString(),
+        };
+
+        setMessages((prev) => [...prev, newMessage]);
+
+        // ✅ Clear both text and file
+        setMessageInput("");
+        setSelectedFile(null);
+        if (fileInputRef.current) {
+          fileInputRef.current.value = null;
+        }
+      } catch (error) {
+        console.error("Error sending message:", error);
+        setIsSending(false);
+      } finally {
+        setIsSending(false);
+      }
     }
   };
 
@@ -165,6 +169,7 @@ const Admin = () => {
               value={messageInput}
               onChange={(e) => setMessageInput(e.target.value)}
             />
+            {error && <p className="error">{error}</p>}
             <p className="attach">Attachments</p>
             <div className="file-input-wrapper">
               <input
