@@ -105,6 +105,7 @@ const Admin = () => {
 
         // ✅ Clear both text and file
         setMessageInput("");
+        setError("");
         setSelectedFile(null);
         if (fileInputRef.current) {
           fileInputRef.current.value = null;
