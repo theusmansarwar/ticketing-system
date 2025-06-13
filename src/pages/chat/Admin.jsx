@@ -117,6 +117,18 @@ const Admin = () => {
       }
     }
   };
+  const formatFileName = (filename) => {
+    const dotIndex = filename.lastIndexOf(".");
+    if (dotIndex === -1) return filename;
+
+    const name = filename.slice(0, dotIndex);
+    const ext = filename.slice(dotIndex);
+
+    if (name.length > 10) {
+      return name.slice(0, 10) + "..." + ext;
+    }
+    return name + ext;
+  };
 
   return (
     <>
@@ -184,9 +196,7 @@ const Admin = () => {
               </label>
               <span className="file-name">
                 {selectedFile
-                  ? selectedFile.name.length > 10
-                    ? selectedFile.name.slice(0, 10) + "..."
-                    : selectedFile.name
+                  ? formatFileName(selectedFile.name)
                   : "No file chosen"}
               </span>
 

@@ -5,15 +5,14 @@
   color: var(--text-color);
   border-radius: var(--default-border-radius);
   padding: 10px;
-margin-top: 10px;
-   display: flex;
+  margin-top: 10px;
+  display: flex;
   align-items: center;
   gap: 10px;
-   box-shadow: var(--default-box-shadow);
+  box-shadow: var(--default-box-shadow);
 }
 
 .file-message span {
-
   border-left: 1px solid var(--text-color);
   padding-left: 10px;
   font-size: var(--default-p-size);
@@ -22,7 +21,7 @@ margin-top: 10px;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 300px;
-   color: black;
+  color: black;
   border-left: 1px solid black;
 }
 .file-message .icon {
@@ -31,19 +30,16 @@ margin-top: 10px;
 }
 @media (max-width: 900px) {
   .file-message {
- max-width: 150px;
- display: flex;
- justify-self: left;
-   padding: 6px 10px;
+    max-width: 180px;
+    display: flex;
+    justify-self: left;
+    padding: 6px 10px;
+  }
+  .file-message span {
+    font-size: 12px;
+  }
+  .file-message .icon {
+    color: black;
+    font-size: 22px;
+  }
 }
-.file-message span{
-  font-size: 12px;
-}
-/* .file-message .icon {
-  color: black;
-  font-size: 50px;
-} */
-
-}
-
-

@@ -20,7 +20,7 @@ const Chat = () => {
   const [messageInput, setMessageInput] = useState("");
   const [messages, setMessages] = useState([]);
   const [ticketData, setTicketData] = useState(null);
-  const [error, setError]=useState("");
+  const [error, setError] = useState("");
   const [expandedMessages, setExpandedMessages] = useState({});
   const toggleExpand = (key) => {
     setExpandedMessages((prev) => ({
@@ -71,52 +71,65 @@ const Chat = () => {
     fileInputRef.current.value = null;
   };
 
- const handleSendMessage = async () => {
+  const handleSendMessage = async () => {
     setIsSending(true);
-      if (messageInput.trim() === "" ){
+    if (messageInput.trim() === "") {
       setError("Please Write Something");
       setIsSending(false);
-    } else{
-    const formData = new FormData();
-    formData.append("TicketId", ticket_id);
-    formData.append("senderemail", userEmail);
-    formData.append("receiveremail", receiverEmail);
-    formData.append("message", messageInput);
-    formData.append("receivername", receivername);
-    if (selectedFile) {
-      formData.append("file", selectedFile);
-      formData.append("fileName", selectedFile.name);
-    }
-    try {
-      await createMessage(formData);
-      const newMessage = {
-        id: Date.now(),
-        message: messageInput.trim(),
-        senderemail: userEmail,
-        file: selectedFile || null,
-        fileName: selectedFile?.name || null,
-        createdAt: new Date().toISOString(),
-      };
-      setMessages((prev) => [...prev, newMessage]);
-      // :white_check_mark: Clear both text and file
-      setMessageInput("");
-      setError("");
-      setSelectedFile(null);
-      if (fileInputRef.current) {
-        fileInputRef.current.value = null;
+    } else {
+      const formData = new FormData();
+      formData.append("TicketId", ticket_id);
+      formData.append("senderemail", userEmail);
+      formData.append("receiveremail", receiverEmail);
+      formData.append("message", messageInput);
+      formData.append("receivername", receivername);
+      if (selectedFile) {
+        formData.append("file", selectedFile);
+        formData.append("fileName", selectedFile.name);
       }
-    } catch (error) {
-      console.error("Error sending message:", error);
-      setIsSending(false);
-    } finally {
-      setIsSending(false);
-    }
+      try {
+        await createMessage(formData);
+        const newMessage = {
+          id: Date.now(),
+          message: messageInput.trim(),
+          senderemail: userEmail,
+          file: selectedFile || null,
+          fileName: selectedFile?.name || null,
+          createdAt: new Date().toISOString(),
+        };
+        setMessages((prev) => [...prev, newMessage]);
+        // :white_check_mark: Clear both text and file
+        setMessageInput("");
+        setError("");
+        setSelectedFile(null);
+        if (fileInputRef.current) {
+          fileInputRef.current.value = null;
+        }
+      } catch (error) {
+        console.error("Error sending message:", error);
+        setIsSending(false);
+      } finally {
+        setIsSending(false);
       }
+    }
   };
   const firstSenderIndex = [
     ...(ticketData?.chats || []),
     ...messages,
   ].findIndex((msg) => msg.senderemail === ticketData?.clientemail);
+
+  const formatFileName = (filename) => {
+    const dotIndex = filename.lastIndexOf(".");
+    if (dotIndex === -1) return filename; 
+
+    const name = filename.slice(0, dotIndex);
+    const ext = filename.slice(dotIndex);
+
+    if (name.length > 10) {
+      return name.slice(0, 10) + "..." + ext;
+    }
+    return name + ext;
+  };
 
   return (
     <>
@@ -183,9 +196,7 @@ const Chat = () => {
               </label>
               <span className="file-name">
                 {selectedFile
-                  ? selectedFile.name.length > 10
-                    ? selectedFile.name.slice(0, 10) + "..."
-                    : selectedFile.name
+                  ? formatFileName(selectedFile.name)
                   : "No file chosen"}
               </span>
 
