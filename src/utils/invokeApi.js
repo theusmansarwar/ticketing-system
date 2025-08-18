@@ -37,7 +37,7 @@ export async function invokeApi({
     return results.data;
   } catch (error) {
     if (error.response) {
-      return error.response.data;
+      return error.response;
     } else if (error.request) {
       return { message: "No response received from server." };
     } else {

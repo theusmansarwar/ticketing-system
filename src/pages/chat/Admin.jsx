@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import "./Chat.css";
 import { MdClose } from "react-icons/md";
 import FileMessage from "../../components/file/FileMessage";
-
+import { FaUpload } from "react-icons/fa6";
 import { FaArrowUp, FaArrowDown } from "react-icons/fa6";
 import { useParams } from "react-router-dom";
 import { fetchTicket } from "../../DAL/fetch";
@@ -17,7 +17,7 @@ const Admin = () => {
   const topRef = useRef(null);
   const [isSending, setIsSending] = useState(false);
   const [error, setError] = useState("");
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedFiles, setselectedFiles] = useState([]);
   const [messageInput, setMessageInput] = useState("");
   const [messages, setMessages] = useState([]);
   const [ticketData, setTicketData] = useState(null);
@@ -31,7 +31,6 @@ const Admin = () => {
   const loadTicket = async () => {
     try {
       const res = await fetchTicket(ticket_id);
-      console.log("Ticket Data:", res);
       setTicketData(res.ticket);
     } catch (error) {
       console.error("Failed to fetch ticket:", error);
@@ -59,16 +58,29 @@ const Admin = () => {
   const scrollToBottom = () => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   };
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setSelectedFile(file);
-    }
-  };
+const handleFileChange = (event) => {
+  const files = Array.from(event.target.files);
 
-  const handleRemoveFile = () => {
-    setSelectedFile(null);
+  setselectedFiles((prev) => {
+    const totalFiles = prev.length + files.length;
+
+    if (totalFiles > 10) {
+      alert("You can only upload a maximum of 10 files.");
+      return prev; // don’t add extra files
+    }
+
+    return [...prev, ...files];
+  });
+
+  // reset input so user can select again
+  if (fileInputRef.current) {
     fileInputRef.current.value = null;
+  }
+};
+
+
+  const handleRemoveFile = (index) => {
+    setselectedFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleSendMessage = async () => {
@@ -84,9 +96,11 @@ const Admin = () => {
       formData.append("message", messageInput);
       formData.append("receivername", receivername);
 
-      if (selectedFile) {
-        formData.append("file", selectedFile);
-        formData.append("fileName", selectedFile.name);
+     if (selectedFiles.length > 0) {
+        selectedFiles.forEach((file) => {
+          formData.append("files", file); // binary
+          // Don’t append "fileNames" separately
+        });
       }
 
       try {
@@ -96,8 +110,10 @@ const Admin = () => {
           id: Date.now(),
           message: messageInput.trim(),
           senderemail: userEmail,
-          file: selectedFile || null,
-          fileName: selectedFile?.name || null,
+         files: selectedFiles.map((f) => ({
+            fileName: f.name,
+            filePath: f, // keep the File object in memory
+          })),
           createdAt: new Date().toISOString(),
         };
 
@@ -106,11 +122,12 @@ const Admin = () => {
         // ✅ Clear both text and file
         setMessageInput("");
         setError("");
-        setSelectedFile(null);
+      setselectedFiles([]);
         if (fileInputRef.current) {
           fileInputRef.current.value = null;
         }
       } catch (error) {
+        alert("ERROR",error)
         console.error("Error sending message:", error);
         setIsSending(false);
       } finally {
@@ -190,23 +207,31 @@ const Admin = () => {
                 id="customFile"
                 ref={fileInputRef}
                 onChange={handleFileChange}
+                multiple
                 style={{ display: "none" }}
               />
               <label htmlFor="customFile" className="custom-file-label">
-                Choose File
+                Choose File <FaUpload/>
               </label>
-              <span className="file-name">
-                {selectedFile
-                  ? formatFileName(selectedFile.name)
-                  : "No file chosen"}
-              </span>
 
-              {selectedFile && (
-                <div className="cancel-btn" onClick={handleRemoveFile}>
-                  <MdClose />
-                </div>
-              )}
+             
             </div>
+            <div className="selected-file-area">
+             {selectedFiles.length > 0
+                  ? selectedFiles.map((f, idx) => (
+                      <div key={idx} className="file-preview">
+                        <p>{formatFileName(f.name)}</p>
+                        <div
+                          className="cancel-btn"
+                          onClick={() => handleRemoveFile(idx)}
+                        >
+                          <MdClose />
+                        </div>
+                      </div>
+                    ))
+                  : ""}
+
+                  </div>
             <div className="btn-area">
               <div
                 className={`send-btn ${isSending ? "disabled" : ""}`}
@@ -241,8 +266,11 @@ const Admin = () => {
                             : msg.message.length > 400
                             ? msg.message.slice(0, 400) + "..."
                             : msg.message}
-                        </p>
-                        {msg?.file && <FileMessage type={msgType} msg={msg} />}
+                        </p> 
+                        {msg?.files &&
+                          msg?.files.map((item) => (
+                            <FileMessage type={msgType} msg={item} />
+                          ))}
                       </>
                     )}
                   </div>

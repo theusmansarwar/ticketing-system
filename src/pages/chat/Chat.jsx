@@ -8,7 +8,7 @@ import { formatDate } from "../../utils/formatDate";
 import { createMessage } from "../../DAL/create";
 import logo from "../../Accets/logo4.png";
 import { FaArrowUp, FaArrowDown } from "react-icons/fa6";
-import { FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { FaChevronDown, FaChevronUp, FaUpload } from "react-icons/fa";
 const Chat = () => {
   const { ticket_id } = useParams();
   const fileInputRef = useRef(null);
@@ -16,7 +16,7 @@ const Chat = () => {
   const topRef = useRef(null);
   const [isSending, setIsSending] = useState(false);
 
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedFiles, setselectedFiles] = useState([]);
   const [messageInput, setMessageInput] = useState("");
   const [messages, setMessages] = useState([]);
   const [ticketData, setTicketData] = useState(null);
@@ -60,15 +60,12 @@ const Chat = () => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   };
   const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setSelectedFile(file);
-    }
+    const files = Array.from(event.target.files);
+    setselectedFiles((prev) => [...prev, ...files]); // append instead of replace
   };
 
-  const handleRemoveFile = () => {
-    setSelectedFile(null);
-    fileInputRef.current.value = null;
+  const handleRemoveFile = (index) => {
+    setselectedFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleSendMessage = async () => {
@@ -83,9 +80,11 @@ const Chat = () => {
       formData.append("receiveremail", receiverEmail);
       formData.append("message", messageInput);
       formData.append("receivername", receivername);
-      if (selectedFile) {
-        formData.append("file", selectedFile);
-        formData.append("fileName", selectedFile.name);
+      if (selectedFiles.length > 0) {
+        selectedFiles.forEach((file) => {
+          formData.append("files", file); // binary
+          // Don’t append "fileNames" separately
+        });
       }
       try {
         await createMessage(formData);
@@ -93,15 +92,17 @@ const Chat = () => {
           id: Date.now(),
           message: messageInput.trim(),
           senderemail: userEmail,
-          file: selectedFile || null,
-          fileName: selectedFile?.name || null,
+          files: selectedFiles.map((f) => ({
+            fileName: f.name,
+            filePath: f, // keep the File object in memory
+          })),
           createdAt: new Date().toISOString(),
         };
         setMessages((prev) => [...prev, newMessage]);
         // :white_check_mark: Clear both text and file
         setMessageInput("");
         setError("");
-        setSelectedFile(null);
+        setselectedFiles([]);
         if (fileInputRef.current) {
           fileInputRef.current.value = null;
         }
@@ -120,7 +121,7 @@ const Chat = () => {
 
   const formatFileName = (filename) => {
     const dotIndex = filename.lastIndexOf(".");
-    if (dotIndex === -1) return filename; 
+    if (dotIndex === -1) return filename;
 
     const name = filename.slice(0, dotIndex);
     const ext = filename.slice(dotIndex);
@@ -190,23 +191,31 @@ const Chat = () => {
                 ref={fileInputRef}
                 onChange={handleFileChange}
                 style={{ display: "none" }}
+                multiple
               />
               <label htmlFor="customFile" className="custom-file-label">
-                Choose File
-              </label>
-              <span className="file-name">
-                {selectedFile
-                  ? formatFileName(selectedFile.name)
-                  : "No file chosen"}
-              </span>
+                              Choose File <FaUpload/>
+                            </label>
+           
 
-              {selectedFile && (
-                <div className="cancel-btn" onClick={handleRemoveFile}>
-                  <MdClose />
-                </div>
-              )}
+           
             </div>
+   <div className="selected-file-area">
+             {selectedFiles.length > 0
+                  ? selectedFiles.map((f, idx) => (
+                      <div key={idx} className="file-preview">
+                        <p>{formatFileName(f.name)}</p>
+                        <div
+                          className="cancel-btn"
+                          onClick={() => handleRemoveFile(idx)}
+                        >
+                          <MdClose />
+                        </div>
+                      </div>
+                    ))
+                  : ""}
 
+                  </div>
             <div className="btn-area">
               <div
                 className={`send-btn ${isSending ? "disabled" : ""}`}
@@ -242,7 +251,10 @@ const Chat = () => {
                             ? msg.message.slice(0, 400) + "..."
                             : msg.message}
                         </p>
-                        {msg?.file && <FileMessage type={msgType} msg={msg} />}
+                        {msg?.files &&
+                          msg?.files.map((item) => (
+                            <FileMessage type={msgType} msg={item} />
+                          ))}
                       </>
                     )}
                   </div>
