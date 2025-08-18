@@ -59,10 +59,25 @@ const Chat = () => {
   const scrollToBottom = () => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   };
-  const handleFileChange = (event) => {
-    const files = Array.from(event.target.files);
-    setselectedFiles((prev) => [...prev, ...files]); // append instead of replace
-  };
+const handleFileChange = (event) => {
+  const files = Array.from(event.target.files);
+
+  setselectedFiles((prev) => {
+    const totalFiles = prev.length + files.length;
+
+    if (totalFiles > 10) {
+      alert("You can only upload a maximum of 10 files.");
+      return prev; // don’t add extra files
+    }
+
+    return [...prev, ...files];
+  });
+
+  // reset input so user can select again
+  if (fileInputRef.current) {
+    fileInputRef.current.value = null;
+  }
+};
 
   const handleRemoveFile = (index) => {
     setselectedFiles((prev) => prev.filter((_, i) => i !== index));
