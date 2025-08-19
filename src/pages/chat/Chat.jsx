@@ -3,13 +3,13 @@ import "./Chat.css";
 import { MdClose } from "react-icons/md";
 import FileMessage from "../../components/file/FileMessage";
 import { useParams } from "react-router-dom";
-import { fetchTicket } from "../../DAL/fetch";
+import { fetchTicket, fetchTicketbyuser } from "../../DAL/fetch";
 import { formatDate } from "../../utils/formatDate";
 import { createMessage } from "../../DAL/create";
-import logo from "../../Accets/logo4.png";
+
 import { FaArrowUp, FaArrowDown } from "react-icons/fa6";
 import { FaChevronDown, FaChevronUp, FaUpload } from "react-icons/fa";
-const Chat = () => {
+const Chat = ({onLogout}) => {
   const { ticket_id } = useParams();
   const fileInputRef = useRef(null);
   const bottomRef = useRef(null);
@@ -22,6 +22,8 @@ const Chat = () => {
   const [ticketData, setTicketData] = useState(null);
   const [error, setError] = useState("");
   const [expandedMessages, setExpandedMessages] = useState({});
+
+  const ticketLoaded = useRef(false);
   const toggleExpand = (key) => {
     setExpandedMessages((prev) => ({
       ...prev,
@@ -31,7 +33,11 @@ const Chat = () => {
 
   const loadTicket = async () => {
     try {
-      const res = await fetchTicket(ticket_id);
+      const token= localStorage.getItem('Secret-token');
+      const res = await fetchTicketbyuser(ticket_id,token);
+      if(res.status==401){
+        onLogout();
+      }
       console.log("Ticket Data:", res);
       setTicketData(res.ticket);
     } catch (error) {
@@ -45,7 +51,10 @@ const Chat = () => {
   const sendername = ticketData?.clientname;
 
   useEffect(() => {
-    loadTicket();
+    if (!ticketLoaded.current) {
+      loadTicket();
+      ticketLoaded.current = true;
+    }
   }, [ticket_id]);
 
   useEffect(() => {
@@ -67,7 +76,7 @@ const handleFileChange = (event) => {
 
     if (totalFiles > 10) {
       alert("You can only upload a maximum of 10 files.");
-      return prev; // don’t add extra files
+      return prev; 
     }
 
     return [...prev, ...files];
@@ -97,8 +106,7 @@ const handleFileChange = (event) => {
       formData.append("receivername", receivername);
       if (selectedFiles.length > 0) {
         selectedFiles.forEach((file) => {
-          formData.append("files", file); // binary
-          // Don’t append "fileNames" separately
+        formData.append("files", file); 
         });
       }
       try {
@@ -109,12 +117,11 @@ const handleFileChange = (event) => {
           senderemail: userEmail,
           files: selectedFiles.map((f) => ({
             fileName: f.name,
-            filePath: f, // keep the File object in memory
+            filePath: f,
           })),
           createdAt: new Date().toISOString(),
         };
         setMessages((prev) => [...prev, newMessage]);
-        // :white_check_mark: Clear both text and file
         setMessageInput("");
         setError("");
         setselectedFiles([]);

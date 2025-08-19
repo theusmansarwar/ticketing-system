@@ -194,8 +194,8 @@
   z-index: 5;
   box-shadow: var(--default-box-shadow);
 
-  max-width: 100%; /* Prevent going outside container */
-  white-space: pre-wrap; /* Allow wrapping in <pre> */
+  max-width: 100%; 
+  white-space: pre-wrap; 
   word-wrap: break-word;
 }
 .error{

@@ -8,7 +8,6 @@ import { useParams } from "react-router-dom";
 import { fetchTicket } from "../../DAL/fetch";
 import { formatDate } from "../../utils/formatDate";
 import { createMessage } from "../../DAL/create";
-import logo from "../../Accets/logo4.png";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 const Admin = () => {
   const { ticket_id } = useParams();
