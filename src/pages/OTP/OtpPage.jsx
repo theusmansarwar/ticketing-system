@@ -33,7 +33,7 @@ export default function OtpPage({ onLoginSuccess }) {
 
     try {
       const res = await verifyotp({ otp, id: ticket_id });
-      setLoading(false);
+      
 
       if (res.status === 200) {
         localStorage.setItem("Secret-token", res.token);
@@ -41,8 +41,12 @@ export default function OtpPage({ onLoginSuccess }) {
         if (onLoginSuccess) {
           onLoginSuccess(res.token);
         }
-
-        navigate(`/ticket/${ticket_id}`, { replace: true });
+       
+setTimeout(()=>{
+   setLoading(false);
+ navigate(`/ticket/${ticket_id}`, { replace: true });
+},5000)
+       
       } else {
         setError(res.message || "Invalid OTP, please try again");
       }
