@@ -31,3 +31,13 @@ export const verifyotp = async (data) => {
   };
   return invokeApi(reqObj);
 };
+export const closeTicket = async (data) => {
+  const reqObj = {
+    path: `/ticket/close`,
+    method: "POST",
+    headers: { },
+
+    postData: data,
+  };
+  return invokeApi(reqObj);
+};

@@ -9,7 +9,7 @@ import { createMessage } from "../../DAL/create";
 
 import { FaArrowUp, FaArrowDown } from "react-icons/fa6";
 import { FaChevronDown, FaChevronUp, FaUpload } from "react-icons/fa";
-const Chat = ({onLogout}) => {
+const Chat = ({ onLogout }) => {
   const { ticket_id } = useParams();
   const fileInputRef = useRef(null);
   const bottomRef = useRef(null);
@@ -33,9 +33,9 @@ const Chat = ({onLogout}) => {
 
   const loadTicket = async () => {
     try {
-      const token= localStorage.getItem('Secret-token');
-      const res = await fetchTicketbyuser(ticket_id,token);
-      if(res.status==401){
+      const token = localStorage.getItem("Secret-token");
+      const res = await fetchTicketbyuser(ticket_id, token);
+      if (res.status == 401) {
         onLogout();
       }
       console.log("Ticket Data:", res);
@@ -68,25 +68,25 @@ const Chat = ({onLogout}) => {
   const scrollToBottom = () => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   };
-const handleFileChange = (event) => {
-  const files = Array.from(event.target.files);
+  const handleFileChange = (event) => {
+    const files = Array.from(event.target.files);
 
-  setselectedFiles((prev) => {
-    const totalFiles = prev.length + files.length;
+    setselectedFiles((prev) => {
+      const totalFiles = prev.length + files.length;
 
-    if (totalFiles > 10) {
-      alert("You can only upload a maximum of 10 files.");
-      return prev; 
+      if (totalFiles > 10) {
+        alert("You can only upload a maximum of 10 files.");
+        return prev;
+      }
+
+      return [...prev, ...files];
+    });
+
+    // reset input so user can select again
+    if (fileInputRef.current) {
+      fileInputRef.current.value = null;
     }
-
-    return [...prev, ...files];
-  });
-
-  // reset input so user can select again
-  if (fileInputRef.current) {
-    fileInputRef.current.value = null;
-  }
-};
+  };
 
   const handleRemoveFile = (index) => {
     setselectedFiles((prev) => prev.filter((_, i) => i !== index));
@@ -106,7 +106,7 @@ const handleFileChange = (event) => {
       formData.append("receivername", receivername);
       if (selectedFiles.length > 0) {
         selectedFiles.forEach((file) => {
-        formData.append("files", file); 
+          formData.append("files", file);
         });
       }
       try {
@@ -179,14 +179,22 @@ const handleFileChange = (event) => {
                   style={{
                     color: "white",
 
-                    background: ticketData?.status ? "blue" : "	#FFBF00",
+                    background: ticketData?.isclosed
+                      ? "	#ff0000ff"
+                      : ticketData?.status
+                      ? "blue"
+                      : "	#FFBF00",
                     padding: "5px",
                     minWidth: "100px",
                     borderRadius: "4px",
                     fontSize: "12px",
                   }}
                 >
-                  {ticketData?.status ? "Answered" : "Pending"}
+                  {ticketData?.isclosed
+                    ? "closed"
+                    : ticketData?.status
+                    ? "Answered"
+                    : "Pending"}
                 </span>
               </p>
               <p>
@@ -197,8 +205,17 @@ const handleFileChange = (event) => {
           </div>
         </div>
         <div className="chat-area">
-          <p className="Heading">Add reply to this ticket</p>
-          <div className="chat-send-section">
+          <p className="Heading">
+            {" "}
+            {ticketData?.isclosed
+              ? "This Ticket has been closed"
+              : "Add reply to this ticket"}
+          </p>
+          <div
+            className={`chat-send-section ${
+              ticketData?.isclosed ? "disabled2" : ""
+            }`}
+          >
             <textarea
               placeholder="Type your message here..."
               value={messageInput}
@@ -216,28 +233,24 @@ const handleFileChange = (event) => {
                 multiple
               />
               <label htmlFor="customFile" className="custom-file-label">
-                              Choose File <FaUpload/>
-                            </label>
-           
-
-           
+                Choose File <FaUpload />
+              </label>
             </div>
-   <div className="selected-file-area">
-             {selectedFiles.length > 0
-                  ? selectedFiles.map((f, idx) => (
-                      <div key={idx} className="file-preview">
-                        <p>{formatFileName(f.name)}</p>
-                        <div
-                          className="cancel-btn"
-                          onClick={() => handleRemoveFile(idx)}
-                        >
-                          <MdClose />
-                        </div>
+            <div className="selected-file-area">
+              {selectedFiles.length > 0
+                ? selectedFiles.map((f, idx) => (
+                    <div key={idx} className="file-preview">
+                      <p>{formatFileName(f.name)}</p>
+                      <div
+                        className="cancel-btn"
+                        onClick={() => handleRemoveFile(idx)}
+                      >
+                        <MdClose />
                       </div>
-                    ))
-                  : ""}
-
-                  </div>
+                    </div>
+                  ))
+                : ""}
+            </div>
             <div className="btn-area">
               <div
                 className={`send-btn ${isSending ? "disabled" : ""}`}

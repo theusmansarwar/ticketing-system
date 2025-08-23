@@ -228,6 +228,32 @@
   font-size: 12px;
 
 }
+.close-ticket-btn{
+  background-color: red;
+  color: white;
+
+ padding: 15px;
+ margin: 10px 0px;
+
+  height: 18px;
+  border-radius: var(--default-border-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  cursor: pointer;
+}
+.disabled {
+  pointer-events: none;
+  opacity: 0.2;
+  cursor: not-allowed;
+}
+.disabled2 {
+  pointer-events: none;
+  opacity: 0.5;
+  cursor: not-allowed;
+  display: none;
+}
 
 .file-name {
   font-size: 12px;
